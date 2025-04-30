@@ -1,0 +1,20 @@
+{
+  "name": "templatron",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": ["template", "generator", "mustache"],
+  "author": "",
+  "license": "ISC",
+  "description": "Un générateur de templates basé sur Mustache qui permet de créer des fichiers à partir de modèles personnalisables",
+  "dependencies": {
+    "inquirer": "^8.2.5",
+    "inquirer-fuzzy-path": "^2.3.0",
+    "mustache": "^4.2.0",
+    "tree-dump": "^1.0.0"
+  }
+}
