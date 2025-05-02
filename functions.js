@@ -15,6 +15,15 @@ export const exitWithScriptError = (message) => {
   process.exit(1)
 }
 
+export const getHelp = (availableTemplates) => {
+  let helpText = '\nAvailable templates :\n\n'
+  availableTemplates.forEach((tpl) => {
+    helpText += `   templatron ${tpl} <name>\n`
+  })
+  helpText += '\n\n'
+  return helpText
+}
+
 export const getConfig = async (templatePath) => {
   try {
     return (await import(path.join(templatePath, 'config.js'))).default

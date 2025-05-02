@@ -11,6 +11,7 @@ import {
   getAnswers,
   getConfig,
   getConfirm,
+  getHelp,
   makeFilesTree,
   parseAndGenerateFile,
 } from './functions.js'
@@ -29,6 +30,13 @@ const ARGV = process.argv
   .slice(2)
   .map((arg) => (arg.startsWith('--') ? arg.slice(2) : arg))
 
+// Handles "--help" or "help" flag
+if (ARGV[0] === 'help' && ARGV.length === 1) {
+  const templatesList = await fs.readdir(TEMPLATES_PATH)
+  console.log(getHelp(templatesList))
+  process.exit(0)
+}
+
 // get template name and element name
 const template = ARGV[0]
 const name = ARGV[1]
@@ -46,7 +54,7 @@ try {
   const templatesList = await fs.readdir(TEMPLATES_PATH)
 
   if (!templatesList.includes(template)) {
-    exitWithScriptError(`Unknown template: ${template}`)
+    exitWithScriptError(`Unknown template: ${template}\n${getHelp(templatesList)}`)
   }
 
   // Loads config file for the selected template
