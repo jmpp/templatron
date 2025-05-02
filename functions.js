@@ -40,8 +40,9 @@ export const getAnswers = async (configFilesToGenerate, name = null) => {
           type: 'fuzzypath',
           name: 'targetDirectory',
           excludePath: (nodePath) => nodePath.includes('node_modules'),
+          excludeFilter: (nodePath) => nodePath.includes('.git'),
           itemType: 'directory',
-          rootPath: './src',
+          rootPath: './', // TODO: makes this configurable
           message: 'Target directory?',
         },
         name && {

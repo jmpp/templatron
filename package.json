@@ -4,8 +4,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "templatron": "./index.js"
   },
   "keywords": ["template", "generator", "mustache"],
   "author": "",
