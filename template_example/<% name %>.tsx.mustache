@@ -4,7 +4,7 @@ import cn from 'classnames'
 import styles from './<% name %>.module.scss'
 
 <%/ scss.yes %>
-interface <% name %>Props {
+type <% name %>Props = {
   className?: string
 }
 
@@ -23,7 +23,6 @@ export const <% name %> = ({ className }: <% name %>Props): JSX.Element => {
 
 <%# lazy.yes %>
 // Lazy-loaded by react-router-dom
-// ts-unused-exports:disable-next-line
 export const Component = <% name %>
 
 <%/ lazy.yes %>

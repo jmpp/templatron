@@ -4,6 +4,7 @@ import path from 'node:path'
 import inquirer from 'inquirer'
 import inquirerFuzzyPath from 'inquirer-fuzzy-path'
 import Mustache from 'mustache'
+import { fileURLToPath } from 'node:url'
 import { printTree } from 'tree-dump'
 
 inquirer.registerPrompt('fuzzypath', inquirerFuzzyPath)
@@ -15,8 +16,49 @@ export const exitWithScriptError = (message) => {
   process.exit(1)
 }
 
-export const getHelp = (availableTemplates) => {
-  let helpText = '\nAvailable templates :\n\n'
+export const findNearestTemplatronDir = async (startDir) => {
+  let currentDir = startDir;
+  
+  while (currentDir !== path.parse(currentDir).root) {
+    const templatronPath = path.join(currentDir, '.templatron');
+    try {
+      const stats = await fs.stat(templatronPath);
+      if (stats.isDirectory()) {
+        return templatronPath;
+      }
+    } catch (err) {
+      // Folder doesn't exists. Continue searching…
+    }
+    currentDir = path.dirname(currentDir);
+  }
+  
+  return null;
+};
+
+export const createTemplatronDir = async (targetDir) => {
+  await createDirectory(targetDir);
+  
+  // Copier les fichiers d'exemple
+  const templateExamplePath = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    'template_example'
+  );
+  
+  const files = await fs.readdir(templateExamplePath);
+  const destFolderPath = path.join(targetDir, 'example')
+  await fs.mkdir(destFolderPath)
+  
+  for (const file of files) {
+    const sourcePath = path.join(templateExamplePath, file);
+    const destFilePath = path.join(destFolderPath, file);
+    await fs.copyFile(sourcePath, destFilePath);
+  }
+  
+  return targetDir;
+};
+
+export const getHelp = (availableTemplates, templatePath) => {
+  let helpText = `\nAvailable templates in ${templatePath} :\n\n`
   availableTemplates.forEach((tpl) => {
     helpText += `   templatron ${tpl} <name>\n`
   })
@@ -26,7 +68,7 @@ export const getHelp = (availableTemplates) => {
 
 export const getConfig = async (templatePath) => {
   try {
-    return (await import(path.join(templatePath, 'config.js'))).default
+    return (await import(path.join(templatePath, 'config.mjs'))).default
   } catch (err) {
     throw new Error(`Cannot find config file in ${templatePath}`)
   }
