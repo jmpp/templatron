@@ -38,7 +38,7 @@ export const findNearestTemplatronDir = async (startDir) => {
 export const createTemplatronDir = async (targetDir) => {
   await createDirectory(targetDir);
   
-  // Copier les fichiers d'exemple
+  // Copy example files
   const templateExamplePath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
     'template_example'
@@ -58,11 +58,11 @@ export const createTemplatronDir = async (targetDir) => {
 };
 
 export const getHelp = (availableTemplates, templatePath) => {
-  let helpText = `\nAvailable templates in ${templatePath} :\n\n`
+  let helpText = `\nAvailable templates in \x1b[33m${templatePath}\x1b[0m :\n\n`
   availableTemplates.forEach((tpl) => {
     helpText += `   templatron ${tpl} <name>\n`
   })
-  helpText += '\n\n'
+  helpText += '\n'
   return helpText
 }
 
@@ -70,7 +70,7 @@ export const getConfig = async (templatePath) => {
   try {
     return (await import(path.join(templatePath, 'config.mjs'))).default
   } catch (err) {
-    throw new Error(`Cannot find config file in ${templatePath}`)
+    throw new Error(`Cannot find config file in \x1b[33m${templatePath}\x1b[0m`)
   }
 }
 

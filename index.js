@@ -15,19 +15,18 @@ import {
   getConfirm,
   getHelp,
   makeFilesTree,
-  parseAndGenerateFile,
+  parseAndGenerateFile
 } from './functions.js'
 
 Mustache.tags = ['<%', '%>']
 
-// TODO: Makes this configurable
-const PRO_PATH = process.cwd()
+const CWD = process.cwd()
 
-let TEMPLATES_PATH = await findNearestTemplatronDir(PRO_PATH);
+let TEMPLATES_PATH = await findNearestTemplatronDir(CWD);
 
 // If no /.templatron/ folder has been found, let's run initialization process
 if (!TEMPLATES_PATH) {
-  console.log("No .templatron directory was found in your project or global configuration.");
+  console.log("No \x1b[33m/.templatron/\x1b[0m directory was found in your project or global configuration.");
   
   const { ok } = await inquirer.prompt([
     {
@@ -42,16 +41,16 @@ if (!TEMPLATES_PATH) {
     process.exit(0);
   }
   
-  // Demander où créer le dossier .templatron
+  // Ask where to create /.templatron/ folder
   const homeDir = process.env.HOME || process.env.USERPROFILE;
   const { location } = await inquirer.prompt([
     {
       type: 'list',
       name: 'location',
-      message: 'Where do you want to initialize /.templatron/ folder?',
+      message: 'Where do you want to initialize \x1b[33m/.templatron/\x1b[0m folder?',
       choices: [
-        { name: `In your home directory ${homeDir} (better for global templates)`, value: 'home' },
-        { name: `In the current working directory ${PRO_PATH} (better for project configuration)`, value: 'cwd' }
+        { name: `In your home directory \x1b[33m${homeDir}/.templatron\x1b[0m (better for global templates)`, value: 'home' },
+        { name: `In the current working directory \x1b[33m${CWD}/.templatron\x1b[0m (better for project configuration)`, value: 'cwd' }
       ]
     }
   ]);
@@ -59,10 +58,10 @@ if (!TEMPLATES_PATH) {
   if (location === 'home') {
     TEMPLATES_PATH = await createTemplatronDir(path.join(homeDir, '.templatron'));
   } else {
-    TEMPLATES_PATH = await createTemplatronDir(path.join(PRO_PATH, '.templatron'));
+    TEMPLATES_PATH = await createTemplatronDir(path.join(CWD, '.templatron'));
   }
   
-  console.log(`\nSuccessfully created! ${TEMPLATES_PATH}\n\nNow you may want to run \`templatron --help\` to list available templates.\n\nFeel free to adapt the example to fit your needs\n`);
+  console.log(`\n\x1b[33m${TEMPLATES_PATH}\x1b[0m successfully created!\n\nNow you may want to run \x1b[33m\`templatron --help\`\x1b[0m to list available templates.\n\nFeel free to adapt the example to fit your needs\n`);
 
   process.exit(0)
 }
@@ -74,7 +73,8 @@ const ARGV = process.argv
 
 // If number of arguments is lower than expected or if we explicitely asked for help…
 if (ARGV.length === 0 || (ARGV[0] === 'help' && ARGV.length === 1)) {
-  const templatesList = await fs.readdir(TEMPLATES_PATH)
+  const filesList = await fs.readdir(TEMPLATES_PATH, { withFileTypes: true })
+  const templatesList = filesList.filter(file => file.isDirectory()).map(file => file.name)
   console.log(getHelp(templatesList, TEMPLATES_PATH))
   process.exit(0)
 }
@@ -117,7 +117,7 @@ try {
 
   // Computes final target directory that will contain the generated files
   const targetDirectory = path.join(
-    PRO_PATH,
+    CWD,
     answers.targetDirectory,
     answers.createNewDirectory ? name : ''
   )
@@ -144,7 +144,7 @@ try {
   console.log('\nThis will generate all these files:\n')
   console.log(
     makeFilesTree({
-      baseRoot: path.join(PRO_PATH, answers.targetDirectory),
+      baseRoot: path.join(CWD, answers.targetDirectory),
       newDirectoryName: answers.createNewDirectory ? name : null,
       fileNames: confirmedFilesToGenerate.map(({ renderedFileName }) =>
         path.basename(renderedFileName)
