@@ -15,7 +15,7 @@ That's why I've created **Templatron** : a tool that allows you to generate file
 
 See an example of execution :
 
-<video src="docs/templatron-demo.mp4" width="1016" height="600" controls></video>
+https://github.com/user-attachments/assets/be3398b0-01c6-4fbc-a491-7eb64d4aed8c
 
 **Table of Contents**
 
