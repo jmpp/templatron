@@ -1,18 +1,15 @@
 {
   "name": "templatron",
-  "version": "0.0.1",
+  "version": "1.0.0-beta",
   "type": "module",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "bin": {
     "templatron": "./index.js"
   },
   "keywords": ["template", "generator", "mustache"],
-  "author": "",
-  "license": "ISC",
-  "description": "Un générateur de templates basé sur Mustache qui permet de créer des fichiers à partir de modèles personnalisables",
+  "author": "Jean-Marie Cléry <jmclery.dev>",
+  "license": "MIT",
+  "description": "A template generator based on Mustache that allows creating files from customizable templates",
   "dependencies": {
     "inquirer": "^8.2.5",
     "inquirer-fuzzy-path": "^2.3.0",

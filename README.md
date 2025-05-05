@@ -3,17 +3,19 @@
 
 # Templatron
 
-## YOUR files generator !
+**The generator that scaffold YOUR own file templates** (currently in beta)
 
-> [!WARNING]
-> This is currently a version 0, adapted from a professional project.
-> It will soon be rewritten to be more generic and fit every needs.
-> 
-> Stay tuned.
+As a developer, you often need to create new code files that comply with the project's code and architecture standards (e.g. components, utils, services, API models … etc.)
 
-If you need to create components, utility files that comply with the project's code and architecture standards, you can use this generation script.
+And often, other files are also required, such as styles, storybooks, tests, documentation…. Creating them by hand (or copy/paste and adapting them) can quickly become tedious.
 
-![](docs/generator.gif)
+That's why I've created **Templatron** : a tool that allows you to generate files from templates that YOU define.
+
+**Templatron** is a simple CLI tool that will generate a couple of files based on templates (written in Mustache), and will ask you the right questions to generate only the files you need in your scenario.
+
+See an example of execution :
+
+<video src="docs/templatron-demo.mp4" width="1016" height="600" controls></video>
 
 **Table of Contents**
 

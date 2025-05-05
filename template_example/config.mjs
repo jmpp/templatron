@@ -10,12 +10,12 @@ export default {
     },
 
     // OPTIONAL
-    // Yes/No questions (put as much as you want)
+    // Yes/No questions associated to the .mustache template files in this path
 
     {
       templateFileName: '<% name %>.module.css.mustache',
       question: 'Generate SCSS module?',
-      varName: 'scss', // A variable that you can use in ".mustache" templates to condition blocks of code
+      varName: 'scss', // A variable that you can use in all ".mustache" templates to condition blocks of code
     },
 
     {

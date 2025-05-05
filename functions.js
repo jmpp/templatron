@@ -90,8 +90,7 @@ export const getAnswers = async (configFilesToGenerate, name = null) => {
         {
           type: 'fuzzypath',
           name: 'targetDirectory',
-          excludePath: (nodePath) => nodePath.includes('node_modules'),
-          excludeFilter: (nodePath) => nodePath.includes('.git'),
+          excludePath: (nodePath) => nodePath.includes('node_modules') || nodePath.includes('.git') || nodePath.includes('.templatron'),
           itemType: 'directory',
           rootPath: './', // TODO: makes this configurable
           message: 'Target directory?',

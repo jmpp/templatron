@@ -83,6 +83,12 @@ if (ARGV.length === 0 || (ARGV[0] === 'help' && ARGV.length === 1)) {
 const template = ARGV[0]
 const name = ARGV[1]
 
+if (!template || !name) {
+  exitWithScriptError(
+    'Missing arguments (required 2)\n\nUsage: templatron <template-name> <element-name>'
+  )
+}
+
 // -------------
 // Script starts
 // -------------
