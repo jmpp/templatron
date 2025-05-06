@@ -19,9 +19,32 @@ https://github.com/user-attachments/assets/be3398b0-01c6-4fbc-a491-7eb64d4aed8c
 
 **Table of Contents**
 
-- [Generate a React Component](#generate-a-react-component)
+- [Install](#install)
 - [Generate a Utility File](#generate-a-utility-file)
 - [(Bonus) Create Your Own File Generation Command ✨](#bonus-create-your-own-file-generation-command)
+
+# Install
+
+You can install templatron globally:
+
+```bash
+npm i -g templatron
+```
+
+or locally in your project:
+
+```bash
+npm i -D templatron
+```
+
+… and then add a script to your `package.json`:
+
+```json
+// package.json
+  "scripts": {
+    "templatron": "templatron"
+  }
+```
 
 # Generate a React Component
 

@@ -6,7 +6,11 @@
   "bin": {
     "templatron": "./index.js"
   },
-  "keywords": ["template", "generator", "mustache"],
+  "keywords": [
+    "template",
+    "generator",
+    "mustache"
+  ],
   "author": "Jean-Marie Cléry <jmclery.dev>",
   "license": "MIT",
   "description": "A template generator based on Mustache that allows creating files from customizable templates",
@@ -15,5 +19,12 @@
     "inquirer-fuzzy-path": "^2.3.0",
     "mustache": "^4.2.0",
     "tree-dump": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmpp/templatron.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jmpp/templatron/issues"
   }
 }
