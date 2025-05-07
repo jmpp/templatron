@@ -1,9 +1,27 @@
 
 <p align="center"><img src="docs/templatron.png" width="250" alt="Templatron" align="center"></p>
 
-# Templatron
+# Templatron: The generator that scaffold your own templates
 
-**The generator that scaffold YOUR own file templates** (currently in beta)
+(currently in beta)
+
+---------
+
+**Table of Contents**
+
+- [Intro](#intro)
+- [Installation](#installation)
+  - [Global installation](#global-installation-recommended)
+  - [Local installation](#local-installation)
+- [Initialize](#initialize)
+  - [Templates folder](#templates-folder)
+- [Customize your templates](#customize-your-templates)
+  - [Configuration File `config.mjs`](#configuration-file-configmjs)
+  - [Template Files `.mustache`](#template-files-mustache)
+
+---------
+
+# Intro
 
 As a developer, you often need to create new code files that comply with the project's code and architecture standards (e.g. components, utils, services, API models … etc.)
 
@@ -15,15 +33,11 @@ That's why I've created **Templatron** : a tool that allows you to generate file
 
 See an example of execution :
 
-https://github.com/user-attachments/assets/be3398b0-01c6-4fbc-a491-7eb64d4aed8c
+https://
 
-**Table of Contents**
+# Installation
 
-- [Install](#install)
-- [Generate a Utility File](#generate-a-utility-file)
-- [(Bonus) Create Your Own File Generation Command ✨](#bonus-create-your-own-file-generation-command)
-
-# Install
+## Global installation (recommended)
 
 You can install templatron globally:
 
@@ -31,10 +45,20 @@ You can install templatron globally:
 npm i -g templatron
 ```
 
-or locally in your project:
+and then generate files from templates simply by running:
 
 ```bash
-npm i -D templatron
+templatron <template_name> <name>
+```
+
+_(See ["Initialize"](#initialize) section below for more details about templates)_
+
+## Local installation
+
+If you prefer to install templatron locally in your project, you can do so by running:
+
+```bash
+npm i --save-dev templatron
 ```
 
 … and then add a script to your `package.json`:
@@ -46,181 +70,89 @@ npm i -D templatron
   }
 ```
 
-# Generate a React Component
-
-Generate a component named **MyComponent**:
+The command will then be available in your project:
 
 ```bash
-yarn generate:component MyComponent
+npm run templatron <template_name> <name>
 ```
 
-This will prompt for the target directory where the component should be created:
+# Initialize
+
+`templatron` will basically need *templates* with configuration to know how to generate files.
+
+A *template* is a folder that contains a `config.mjs` file and one or more `.mustache` files, for example :
 
 ```
-? Target directory? (Use arrow keys or type to search)
-❯ ./src
-  src/apiClient
-  src/apiClient/__specs__
-  src/apiClient/adage
-  src/apiClient/adage/core
-  src/apiClient/adage/models
-  src/apiClient/adage/services
-(Move up and down to reveal more choices)
+~/.templatron
+│
+├── typescript_template
+│   ├── config.mjs
+│   ├── <% name %>.ts.mustache
+│   └── <% name %>.spec.ts.mustache
+│
+└── php_template
+    ├── config.mjs
+    ├── <% name %>.class.php.mustache
+    └── <% name %>.interface.php.mustache
 ```
 
-The utility will then ask if a subdirectory should be created for the generated files:
+Here you have two templates : **typescript_template** and **php_template** with their own configuration and files.
 
-```
-? Create sub-directory /MyComponent/ ? (Y/n)
-```
+Markers `<% name %>` will be replaced by the name you'll choose when you'll run the CLI tool.
 
-You can then choose whether to generate files for the SCSS module, tests, and stories:
+## Templates folder
 
-```
-✔ Generate SCSS module? (Use arrow keys)
-❯ Yes
-  No
+All templates must be stored in a main folder named `.templatron`.
 
-✔ Generate test file? (Use arrow keys)
-❯ Yes
-  No
+It can be located in your home directory (like `~/.templatron`), but also in your project's root directory (like `~/projects/my-project/.templatron`).
 
-✔ Generate storybook file? (Use arrow keys)
-❯ Yes
-  No
-```
+By default, the CLI tool will try to find the nearest `.templatron` folder from the current working directory (like `npm` does with `node_modules`).
 
-Finally, a summary will be displayed before final confirmation:
+This behavior adds a lot of flexibility, as you can have different templates for different projects 🎉
 
-```
-This will generate all these files:
-
-/Users/jm/src/components
-└─ MyComponent
-   ├─ MyComponent.tsx
-   ├─ MyComponent.module.scss
-   ├─ MyComponent.spec.tsx
-   └─ MyComponent.stories.tsx
-
-? Is that ok? (Y/n)
-```
-
-If everything went well, a confirmation of the generated files will appear:
-
-```
-✅ Successfully generated files:
-
- - /Users/jm/src/components/MyComponent/MyComponent.tsx
- - /Users/jm/src/components/MyComponent/MyComponent.module.scss
- - /Users/jm/src/components/MyComponent/MyComponent.spec.tsx
- - /Users/jm/src/components/MyComponent/MyComponent.stories.tsx
-```
-
-# Generate a Utility File
-
-Generate a utility named **myUtil**:
+If this is your first time with Templatron, you can initialize a `.templatron` folder with an example template by running :
 
 ```bash
-yarn generate:util myUtil
+templatron --help
 ```
 
-This will prompt for the target directory where the utility should be created:
+https://…
 
-```
-? Target directory? (Use arrow keys or type to search)
-❯ ./src
-  src/apiClient
-  src/apiClient/__specs__
-  src/apiClient/adage
-  src/apiClient/adage/core
-  src/apiClient/adage/models
-  src/apiClient/adage/services
-(Move up and down to reveal more choices)
-```
+Feel free to explore the [example template](./template_example/) and its configuration file to understand how it works.
 
-The utility will then ask if a subdirectory should be created for the generated files:
+Continue to the [Customize your templates](#customize-your-templates) section below to learn how to create your own templates.
 
-```
-? Create sub-directory /myUtil/ ? (Y/n)
-```
+# Customize your templates
 
-You can then choose whether to generate the spec file:
-
-```
-✔ Generate test file? (Use arrow keys)
-❯ Yes
-  No
-```
-
-Finally, a summary will be displayed before final confirmation:
-
-```
-This will generate all these files:
-
-/Users/jm/src/utils
-├─ myUtil.ts
-└─ myUtil.spec.ts
-
-✔ Is that ok? yes
-```
-
-If everything went well, a confirmation of the generated files will appear:
-
-```
-✅ Successfully generated files:
-
- - /Users/jm/src/utils/myUtil.ts
- - /Users/jm/src/utils/myUtil.spec.ts
-```
-
-# (Bonus) Create Your Own File Generation Command
-
-You can create your own commands to generate files from templates.
-
-The **yarn** command shortcuts must be specified in **package.json**:
-
-```json
-{
-  "scripts": {
-    "generate:new_command": "node ./scripts/generator/index.js --new_command"
-  }
-}
-```
-
-The new command should be invoked as follows:
-
-```bash
-yarn generate:new_command <ELEMENT_NAME>
-```
-
-Then, you need to create a folder **with the same name as the desired command** in the templates directory `./scripts/generator/_templates`.
-
-The folder must include a configuration file `config.js` and one or more template files `.mustache`.
+At this point, you know that templates are just folders located in a `.templatron` directory.
 
 Example:
 
 ```
-_templates
-└─ new_command
-   ├─ config.js
-   ├─ <% name %>.ts.mustache
-   └─ <% name %>.spec.ts.mustache
+~/.templatron
+└── foo
+    ├── config.mjs
+    ├── <% name %>.ts.mustache
+    ├── <% name %>.spec.ts.mustache
+    └── …
 ```
 
-> [!WARNING]
->
-> Currently, template subdirectories are not yet supported (work in progress)
+When you run `templatron foo Bar`, it will :
 
-The `.mustache` file names must include the desired extension (ts, js, tsx, ...) and can include the `<% name %>` variable which will be replaced by the `<ELEMENT_NAME>` value chosen when invoking the command.
+- search for the `foo` template in the `.templatron` directory and read the configuration file
+- use `Bar` as the name to use for the tag `<% name %>` in the files name and also `.mustache` files
 
-## Configuration File `config.js`
+The files will then be generated depending on the configuration file, for example here :
 
-The `config.js` file must export a default configuration object with the following properties:
+- `Bar.ts`
+- `Bar.spec.ts`
+
+## Configuration File `config.mjs`
+
+The `config.mjs` file must export a default configuration object with the following properties:
 
 ```js
 export default {
-  templateFolderName: 'new_command',
-
   filesToGenerate: [
     // 1st file will always be generated
     {
@@ -237,7 +169,6 @@ export default {
 }
 ```
 
-- `templateFolderName`: the name of the template folder to use
 - `filesToGenerate`: an array of files to generate
 
 The first object in the array **will always be generated**, and should only contain the `templateFileName` property.
@@ -248,17 +179,22 @@ The following objects will be generated if the confirmation question is validate
 
 Template files are compiled using [Mustache.js](https://github.com/janl/mustache.js).
 
-Each file receives the following view object:
+After you answered the Yes/No questions, each file will receives an object with the following view:
 
 ```js
 {
-  name: "<ELEMENT_NAME>", //
+  name: "Bar", // The name of the file to generate
+
+  // varName "spec"
   spec: { yes: true, no: false }, // Based on user's answer
-  // ...
+
+  // …
 }
 ```
 
-The content of each `.mustache` file can thus read the value of `name` and `spec` to choose the code to generate:
+The content of each `.mustache` file can thus read the value of `name` and `spec` to choose the code to generate.
+
+For example :
 
 ```mustache
 <%# spec.yes %>
@@ -271,15 +207,15 @@ The content of each `.mustache` file can thus read the value of `name` and `spec
 
 const <% name %> = "Hello World!"
 
-// Rest of file to be generated ...
+// Rest of file to be generated …
 ```
 
-If the user invoked the command `yarn generate:new_command message` and chose "No" for the "spec" question, then the generated file would be:
+If you invoked the command `templatron foo Bar` and chose "No" for the "spec" question, then the generated file would be:
 
 ```ts
 // This will be present only if user answered "No" to the "spec" question
 
-const message = 'Hello World!'
+const Bar = 'Hello World!'
 
-// Rest of file to be generated ...
+// Rest of file to be generated …
 ```

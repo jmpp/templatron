@@ -12,7 +12,7 @@ inquirer.registerPrompt('fuzzypath', inquirerFuzzyPath)
 Mustache.tags = ['<%', '%>']
 
 export const exitWithScriptError = (message) => {
-  console.log(`\n❌ ${message}\n`)
+  console.log(`\n🤖 ${message}\n`)
   process.exit(1)
 }
 
@@ -58,9 +58,9 @@ export const createTemplatronDir = async (targetDir) => {
 };
 
 export const getHelp = (availableTemplates, templatePath) => {
-  let helpText = `\nAvailable templates in \x1b[33m${templatePath}\x1b[0m :\n\n`
+  let helpText = `\n🤖 Available templates in \x1b[33m${templatePath}\x1b[0m :\n\n`
   availableTemplates.forEach((tpl) => {
-    helpText += `   templatron ${tpl} <name>\n`
+    helpText += `   $ templatron ${tpl} <name>\n`
   })
   helpText += '\n'
   return helpText

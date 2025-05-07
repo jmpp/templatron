@@ -26,7 +26,7 @@ let TEMPLATES_PATH = await findNearestTemplatronDir(CWD);
 
 // If no /.templatron/ folder has been found, let's run initialization process
 if (!TEMPLATES_PATH) {
-  console.log("No \x1b[33m/.templatron/\x1b[0m directory was found in your project or global configuration.");
+  console.log("\n🤖 No \x1b[33m/.templatron/\x1b[0m directory was found in your project or global configuration.\n");
   
   const { ok } = await inquirer.prompt([
     {
@@ -47,10 +47,10 @@ if (!TEMPLATES_PATH) {
     {
       type: 'list',
       name: 'location',
-      message: 'Where do you want to initialize \x1b[33m/.templatron/\x1b[0m folder?',
+      message: 'Where do you want to put \x1b[33m/.templatron/\x1b[0m folder?',
       choices: [
-        { name: `In your home directory \x1b[33m${homeDir}/.templatron\x1b[0m (better for global templates)`, value: 'home' },
-        { name: `In the current working directory \x1b[33m${CWD}/.templatron\x1b[0m (better for project configuration)`, value: 'cwd' }
+        { name: `In your home directory \x1b[33m(${homeDir}/.templatron)\x1b[0m`, value: 'home' },
+        { name: `In the current working directory \x1b[33m(${CWD}/.templatron)\x1b[0m`, value: 'cwd' }
       ]
     }
   ]);
@@ -61,7 +61,7 @@ if (!TEMPLATES_PATH) {
     TEMPLATES_PATH = await createTemplatronDir(path.join(CWD, '.templatron'));
   }
   
-  console.log(`\n\x1b[33m${TEMPLATES_PATH}\x1b[0m successfully created!\n\nNow you may want to run \x1b[33m\`templatron --help\`\x1b[0m to list available templates.\n\nFeel free to adapt the example to fit your needs\n`);
+  console.log(`\n🤖 \x1b[33m${TEMPLATES_PATH}\x1b[0m successfully created with an example template!\n\nNow you may want to run \x1b[33m\`templatron --help\`\x1b[0m to list available templates.\n\nFeel free to adapt the \`/example/\` template to fit your needs\n`);
 
   process.exit(0)
 }

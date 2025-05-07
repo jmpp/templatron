@@ -1,6 +1,4 @@
 export default {
-  templateFolderName: 'example',
-
   filesToGenerate: [
 
     // MANDATORY
