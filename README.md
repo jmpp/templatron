@@ -33,7 +33,7 @@ That's why I've created **Templatron** : a tool that allows you to generate file
 
 See an example of execution :
 
-https://
+https://github.com/user-attachments/assets/32d8e60d-4cad-4d60-8b22-237be8d050f1
 
 # Installation
 
@@ -116,7 +116,7 @@ If this is your first time with Templatron, you can initialize a `.templatron` f
 templatron --help
 ```
 
-https://…
+https://github.com/user-attachments/assets/f1e1d389-77a8-4c0b-a33c-96c96672486a
 
 Feel free to explore the [example template](./template_example/) and its configuration file to understand how it works.
 
