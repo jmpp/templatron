@@ -1,6 +1,6 @@
 {
   "name": "templatron",
-  "version": "1.0.1-beta",
+  "version": "1.0.2-beta",
   "type": "module",
   "main": "index.js",
   "bin": {
@@ -15,6 +15,7 @@
   "license": "MIT",
   "description": "A template generator based on Mustache that allows creating files from customizable templates",
   "dependencies": {
+    "commander": "^13.1.0",
     "inquirer": "^8.2.5",
     "inquirer-fuzzy-path": "^2.3.0",
     "mustache": "^4.2.0",

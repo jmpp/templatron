@@ -12,28 +12,72 @@ inquirer.registerPrompt('fuzzypath', inquirerFuzzyPath)
 Mustache.tags = ['<%', '%>']
 
 export const exitWithScriptError = (message) => {
-  console.log(`\n🤖 ${message}\n`)
+  console.log(`\n❌ ${message}\n`)
   process.exit(1)
 }
 
 export const findNearestTemplatronDir = async (startDir) => {
-  let currentDir = startDir;
+  let currentDir = startDir
   
   while (currentDir !== path.parse(currentDir).root) {
-    const templatronPath = path.join(currentDir, '.templatron');
+    const templatronPath = path.join(currentDir, '.templatron')
     try {
-      const stats = await fs.stat(templatronPath);
+      const stats = await fs.stat(templatronPath)
       if (stats.isDirectory()) {
-        return templatronPath;
+        return templatronPath
       }
     } catch (err) {
       // Folder doesn't exists. Continue searching…
     }
-    currentDir = path.dirname(currentDir);
+    currentDir = path.dirname(currentDir)
   }
   
-  return null;
+  return null
 };
+
+export const initializeTemplatron = async () => {
+  console.log("\n🤖 No \x1b[33m.templatron/\x1b[0m directory was found in your project or global configuration.\n");
+
+  const CWD = process.cwd()
+  
+  const { ok } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'ok',
+      message: 'Do you want to create one?',
+      default: true,
+    }
+  ]);
+  
+  if (!ok) {
+    process.exit(0);
+  }
+  
+  // Ask where to create /.templatron/ folder
+  const homeDir = process.env.HOME || process.env.USERPROFILE;
+  const { location } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'location',
+      message: 'Where do you want to put \x1b[33m.templatron/\x1b[0m folder?',
+      choices: [
+        { name: `In your home directory \x1b[33m(${homeDir}/.templatron)\x1b[0m`, value: 'home' },
+        { name: `In the current working directory \x1b[33m(${CWD}/.templatron)\x1b[0m`, value: 'cwd' }
+      ]
+    }
+  ]);
+  
+  let templates_path;
+  if (location === 'home') {
+    templates_path = await createTemplatronDir(path.join(homeDir, '.templatron'));
+  } else {
+    templates_path = await createTemplatronDir(path.join(CWD, '.templatron'));
+  }
+  
+  console.log(`\n✅ Directory \x1b[33m${templates_path}\x1b[0m successfully created with an example template!\n\nRun \x1b[33m\`templatron --list\`\x1b[0m to list available templates.\n\nFeel free to adapt the \`/example/\` template folder to fit your needs\n`);
+
+  process.exit(0)
+}
 
 export const createTemplatronDir = async (targetDir) => {
   await createDirectory(targetDir);
@@ -57,12 +101,11 @@ export const createTemplatronDir = async (targetDir) => {
   return targetDir;
 };
 
-export const getHelp = (availableTemplates, templatePath) => {
-  let helpText = `\n🤖 Available templates in \x1b[33m${templatePath}\x1b[0m :\n\n`
+export const getAvailableTemplates = (availableTemplates, templatePath) => {
+  let helpText = `\nAvailable templates in \x1b[33m${templatePath}\x1b[0m :\n\n`
   availableTemplates.forEach((tpl) => {
-    helpText += `   $ templatron ${tpl} <name>\n`
+    helpText += `     templatron ${tpl} <name>\n`
   })
-  helpText += '\n'
   return helpText
 }
 

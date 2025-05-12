@@ -3,17 +3,17 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import inquirer from 'inquirer'
+import { program } from 'commander'
 import Mustache from 'mustache'
 import {
   createDirectory,
-  createTemplatronDir,
   exitWithScriptError,
   findNearestTemplatronDir,
   getAnswers,
+  getAvailableTemplates,
   getConfig,
   getConfirm,
-  getHelp,
+  initializeTemplatron,
   makeFilesTree,
   parseAndGenerateFile
 } from './functions.js'
@@ -22,72 +22,43 @@ Mustache.tags = ['<%', '%>']
 
 const CWD = process.cwd()
 
-let TEMPLATES_PATH = await findNearestTemplatronDir(CWD);
+// CLI configuration
 
-// If no /.templatron/ folder has been found, let's run initialization process
+program
+  .version('1.0.2-beta', '-v, --version')
+  .usage('<template> <name>\n       templatron [options]')
+  .option('-l, --list', 'list available templates for current working directory')
+  .argument('[template]', 'Name of the template to use (see --list option)')
+  .argument('[name]', 'Name of the file to create with the template')
+  .allowExcessArguments(false)
+  .allowUnknownOption(false)
+
+program.parse()
+
+const OPTS = program.opts()
+const ARGS = program.args;
+
+const TEMPLATES_PATH = await findNearestTemplatronDir(CWD);
+
 if (!TEMPLATES_PATH) {
-  console.log("\n🤖 No \x1b[33m/.templatron/\x1b[0m directory was found in your project or global configuration.\n");
-  
-  const { ok } = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'ok',
-      message: 'Do you want to create one?',
-      default: true,
-    }
-  ]);
-  
-  if (!ok) {
-    process.exit(0);
-  }
-  
-  // Ask where to create /.templatron/ folder
-  const homeDir = process.env.HOME || process.env.USERPROFILE;
-  const { location } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'location',
-      message: 'Where do you want to put \x1b[33m/.templatron/\x1b[0m folder?',
-      choices: [
-        { name: `In your home directory \x1b[33m(${homeDir}/.templatron)\x1b[0m`, value: 'home' },
-        { name: `In the current working directory \x1b[33m(${CWD}/.templatron)\x1b[0m`, value: 'cwd' }
-      ]
-    }
-  ]);
-  
-  if (location === 'home') {
-    TEMPLATES_PATH = await createTemplatronDir(path.join(homeDir, '.templatron'));
-  } else {
-    TEMPLATES_PATH = await createTemplatronDir(path.join(CWD, '.templatron'));
-  }
-  
-  console.log(`\n🤖 \x1b[33m${TEMPLATES_PATH}\x1b[0m successfully created with an example template!\n\nNow you may want to run \x1b[33m\`templatron --help\`\x1b[0m to list available templates.\n\nFeel free to adapt the \`/example/\` template to fit your needs\n`);
-
-  process.exit(0)
+  await initializeTemplatron()
 }
 
-// Checks command invocation
-const ARGV = process.argv
-  .slice(2)
-  .map((arg) => (arg.startsWith('--') ? arg.slice(2) : arg))
-
-// If number of arguments is lower than expected or if we explicitely asked for help…
-if (ARGV.length === 0 || (ARGV[0] === 'help' && ARGV.length === 1)) {
+// Listing available templates if asked
+if (OPTS.list) {
   const filesList = await fs.readdir(TEMPLATES_PATH, { withFileTypes: true })
   const templatesList = filesList.filter(file => file.isDirectory()).map(file => file.name)
-  console.log(getHelp(templatesList, TEMPLATES_PATH))
+  console.log(getAvailableTemplates(templatesList, TEMPLATES_PATH), '\n')
   process.exit(0)
 }
 
-// Get template name and element name
-const template = ARGV[0]
-const name = ARGV[1]
-
-if (!template || !name) {
-  exitWithScriptError(
-    'Missing arguments (required 2)\n\nUsage: templatron <template-name> <element-name>'
-  )
+if (!OPTS.list && (!ARGS[0] || !ARGS[1])) {
+  exitWithScriptError('Arguments [template] and [name] are required\n\nFor more info:\n\n  templatron --help')
 }
+
+// Get arguments template name and element's name
+const template = program.args[0]
+const name = program.args[1]
 
 // -------------
 // Script starts
@@ -98,12 +69,14 @@ try {
   const templatesList = await fs.readdir(TEMPLATES_PATH)
 
   if (!templatesList.includes(template)) {
-    exitWithScriptError(`Unknown template: ${template}\n${getHelp(templatesList, TEMPLATES_PATH)}`)
+    exitWithScriptError(`Unknown template: ${template}\n${getAvailableTemplates(templatesList, TEMPLATES_PATH)}`)
   }
 
   // Loads config file for the selected template
   const templatePath = path.join(TEMPLATES_PATH, template)
   const config = await getConfig(templatePath)
+
+  console.log(`\n   🤖 Using template \x1b[33m${templatePath}\x1b[0m …\n`)
 
   // Asks for user input
   const answers = await getAnswers(config.filesToGenerate, name)
