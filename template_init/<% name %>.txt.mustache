@@ -7,3 +7,7 @@ You also can use helpers like this:
 - Camel case: <%# toCamelCase %><% name %><%/ toCamelCase %>
 - Upper case: <%# toUpperCase %><% name %><%/ toUpperCase %>
 - Lower case: <%# toLowerCase %><% name %><%/ toLowerCase %>
+
+You can also mix helpers :
+
+- Upper snake case: <%# toUpperCase %><%# toSnakeCase %><% name %><%/ toSnakeCase %><%/ toUpperCase %>

@@ -11,13 +11,18 @@
 
 - [Intro](#intro)
 - [Installation](#installation)
-  - [Global installation](#global-installation-recommended)
+  - [Global installation (recommended)](#global-installation-recommended)
   - [Local installation](#local-installation)
 - [Initialize](#initialize)
   - [Templates folder](#templates-folder)
+- [Create a new template](#create-a-new-template)
+- [List templates](#list-templates)
 - [Customize your templates](#customize-your-templates)
   - [Configuration File `config.mjs`](#configuration-file-configmjs)
   - [Template Files `.mustache`](#template-files-mustache)
+    - [Mustache helpers](#mustache-helpers)
+- [Remove a template](#remove-a-template)
+
 
 ---------
 
@@ -110,10 +115,10 @@ By default, the CLI tool will try to find the nearest `.templatron` folder from 
 
 This behavior adds a lot of flexibility, as you can have different templates for different projects 🎉
 
-If this is your first time with Templatron, you can initialize a `.templatron` folder with an example template by running :
+If this is your first time with Templatron, you can initialize a `.templatron` folder with an example template juste by running :
 
 ```bash
-templatron --help
+templatron
 ```
 
 https://github.com/user-attachments/assets/f1e1d389-77a8-4c0b-a33c-96c96672486a
@@ -121,6 +126,27 @@ https://github.com/user-attachments/assets/f1e1d389-77a8-4c0b-a33c-96c96672486a
 Feel free to explore the [example template](./template_example/) and its configuration file to understand how it works.
 
 Continue to the [Customize your templates](#customize-your-templates) section below to learn how to create your own templates.
+
+# Create a new template
+
+To create a new template, you can use the `templatron --create <template_name>` command.
+
+```bash
+templatron --create <template_name>
+```
+
+This will create a new template in the current working directory.
+
+# List templates
+
+To list all templates, you can use the `templatron --list` command.
+
+```bash
+templatron --list
+```
+
+This will list all templates in the current working directory.
+
 
 # Customize your templates
 
@@ -154,15 +180,15 @@ The `config.mjs` file must export a default configuration object with the follow
 ```js
 export default {
   filesToGenerate: [
-    // 1st file will always be generated
+    // MANDATORY : This 1st file will always be generated
     {
       templateFileName: '<% name %>.ts.mustache',
     },
     // Yes/No questions ...
     {
-      templateFileName: '<% name %>.spec.ts.mustache',
       question: 'Generate spec file?',
       varName: 'spec',
+      templateFileName: '<% name %>.spec.ts.mustache',
     },
     // ...
   ],
@@ -171,9 +197,13 @@ export default {
 
 - `filesToGenerate`: an array of files to generate
 
-The first object in the array **will always be generated**, and should only contain the `templateFileName` property.
+The first object in the array **will always be generated**, and should **only contain** the `templateFileName` property.
 
 The following objects will be generated if the confirmation question is validated by the user. The answer to the question is stored in the `varName` property of the configuration file, to be used in the `.mustache` templates.
+
+- `question`: the question to ask the user
+- `varName`: the name of the variable to store the answer in
+- `templateFileName`: (optional) the name of the file to generate if the question is answered with "Yes"
 
 ## Template Files `.mustache`
 
@@ -219,3 +249,105 @@ const Bar = 'Hello World!'
 
 // Rest of file to be generated …
 ```
+
+### Mustache helpers
+
+By default, Templatron assumes that the name of the element you will use is written in PascalCase :
+
+```bash
+templatron example MyExampleComponent
+```
+
+If you want to use a different case inside `.mustache` templates, you can use a list of different helpers to convert the name to the desired case :
+
+#### `toKebabCase`
+
+Convert a string to kebab case, assuming the name is `"MyExampleComponent"` :
+
+```mustache
+.<%# toKebabCase %><% name %><%/ toKebabCase %> {
+  box-sizing: border-box;
+}
+```
+
+will generate :
+
+```css
+.my-example-component {
+  box-sizing: border-box;
+}
+```
+
+#### `toSnakeCase`
+
+Convert a string to snake case, assuming the name is `"MyExampleComponent"` :
+
+```mustache
+from django.urls import path
+from . import views
+urlpatterns=[
+  path('<%# toSnakeCase %><% name %><%/ toSnakeCase %>',views.home,name='<%# toSnakeCase %><% name %><%/ toSnakeCase %>'),
+]
+```
+
+will generate :
+
+```python
+from django.urls import path
+from . import views
+urlpatterns=[
+  path('my_example_component',views.home,name='my_example_component'),
+]
+```
+
+#### `toCamelCase`
+
+Convert a string to camel case, assuming the name is `"MyExampleComponent"` :
+
+```mustache
+const <%# toCamelCase %><% name %><%/ toCamelCase %> = "Hello World!"
+```
+
+will generate :
+
+```js
+const myExampleComponent = "Hello World!"
+```
+
+#### `toUppercase`
+
+Convert a string to uppercase, assuming the name is `"MyExampleComponent"` :
+
+```mustache
+const <%# toUppercase %><% name %><%/ toUppercase %> = "Hello World!"
+```
+
+will generate :
+
+```js
+const MYEXAMPLECOMPONENT = "Hello World!"
+```
+
+#### `toLowerCase`
+
+Convert a string to lowercase, assuming the name is `"MyExampleComponent"` :
+
+```mustache
+const <%# toLowerCase %><% name %><%/ toLowerCase %> = "Hello World!"
+```
+
+will generate :
+
+```js
+const myexamplecomponent = "Hello World!"
+```
+
+# Remove a template
+
+To remove a template, you can use the `templatron --remove <template_name>` command.
+
+```bash
+templatron --remove <template_name>
+```
+
+This will remove the template from the current working directory.
