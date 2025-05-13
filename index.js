@@ -7,6 +7,7 @@ import { program } from 'commander'
 import Mustache from 'mustache'
 import {
   createDirectory,
+  createTemplate,
   exitWithScriptError,
   findNearestTemplatronDir,
   getAnswers,
@@ -15,8 +16,11 @@ import {
   getConfirm,
   initializeTemplatron,
   makeFilesTree,
-  parseAndGenerateFile
+  parseAndGenerateFile,
+  removeTemplate
 } from './functions.js'
+
+const VERSION = await fs.readFile('./package.json', 'utf8').then(JSON.parse).then(pkg => pkg.version)
 
 Mustache.tags = ['<%', '%>']
 
@@ -25,9 +29,11 @@ const CWD = process.cwd()
 // CLI configuration
 
 program
-  .version('1.0.2-beta', '-v, --version')
+  .version(VERSION, '-v, --version')
   .usage('<template> <name>\n       templatron [options]')
   .option('-l, --list', 'list available templates for current working directory')
+  .option('-c, --create <template_name>', 'creates a new template boilerplate in the current working directory')
+  .option('-r, --remove <template_name>', 'removes a template from the current working directory')
   .argument('[template]', 'Name of the template to use (see --list option)')
   .argument('[name]', 'Name of the file to create with the template')
   .allowExcessArguments(false)
@@ -50,6 +56,18 @@ if (OPTS.list) {
   const templatesList = filesList.filter(file => file.isDirectory()).map(file => file.name)
   console.log(getAvailableTemplates(templatesList, TEMPLATES_PATH), '\n')
   process.exit(0)
+}
+
+// Create a new template
+if (OPTS.create) {
+  await createTemplate(OPTS.create);
+  process.exit(0);
+}
+
+// Remove a template
+if (OPTS.remove) {
+  await removeTemplate(OPTS.remove);
+  process.exit(0);
 }
 
 if (!OPTS.list && (!ARGS[0] || !ARGS[1])) {

@@ -1,6 +1,6 @@
 {
   "name": "templatron",
-  "version": "1.0.2-beta",
+  "version": "1.1.0-beta",
   "type": "module",
   "main": "index.js",
   "bin": {
