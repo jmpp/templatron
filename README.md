@@ -5,6 +5,8 @@
 
 (currently in beta)
 
+![](./docs/templatron-demo.gif)
+
 ---------
 
 **Table of Contents**
@@ -35,10 +37,6 @@ And often, other files are also required, such as styles, storybooks, tests, doc
 That's why I've created **Templatron** : a tool that allows you to generate files from templates that YOU define.
 
 **Templatron** is a simple CLI tool that will generate a couple of files based on templates (written in Mustache), and will ask you the right questions to generate only the files you need in your scenario.
-
-See an example of execution :
-
-https://github.com/user-attachments/assets/32d8e60d-4cad-4d60-8b22-237be8d050f1
 
 # Installation
 
@@ -120,8 +118,6 @@ If this is your first time with Templatron, you can initialize a `.templatron` f
 ```bash
 templatron
 ```
-
-https://github.com/user-attachments/assets/f1e1d389-77a8-4c0b-a33c-96c96672486a
 
 Feel free to explore the [example template](./template_example/) and its configuration file to understand how it works.
 
