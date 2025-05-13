@@ -5,6 +5,7 @@ import path from 'node:path'
 
 import { program } from 'commander'
 import Mustache from 'mustache'
+import { fileURLToPath } from 'node:url'
 import {
   createDirectory,
   createTemplate,
@@ -20,11 +21,13 @@ import {
   removeTemplate
 } from './functions.js'
 
-const VERSION = await fs.readFile('./package.json', 'utf8').then(JSON.parse).then(pkg => pkg.version)
-
 Mustache.tags = ['<%', '%>']
 
 const CWD = process.cwd()
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const VERSION = await fs.readFile(path.join(__dirname, 'package.json'), 'utf8').then(JSON.parse).then(pkg => pkg.version)
 
 // CLI configuration
 

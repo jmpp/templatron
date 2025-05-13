@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "templatron": "./index.js"
+    "templatron": "index.js"
   },
   "keywords": [
     "template",
